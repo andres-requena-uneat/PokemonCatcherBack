@@ -4,21 +4,25 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
+using System.Web.Mvc;
 using MongoConnection;
 
 namespace PokemonCatcherBack.Controllers
 {
+    [EnableCors(origins: "http://localhost:3000", headers: "*", methods: "*")]
     public class PokemonController : ApiController
     {
         MongoConnection.MongoConnection Client = new MongoConnection.MongoConnection();
 
-
-        public List<Pokemon> Get()
+        [System.Web.Http.HttpGet]
+        public List<Pokemon> Get(int page)
         {
-            return Client.GetAllPokemon();
+            return Client.GetBoxPage(page);
         }
 
         // POST api/<controller>
+        [System.Web.Http.HttpPost]
         public string Post([FromBody] Pokemon pokemon)
         {
             try

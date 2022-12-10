@@ -39,6 +39,20 @@ namespace MongoConnection
 
         }
 
+        public List<Pokemon> GetBoxPage(int Page)
+        {
+            try
+            {
+                return PaginateBoxes(Page);
+
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+        }
+
         public List<Pokemon> GetAllPokemon()
         {
             try
@@ -70,7 +84,7 @@ namespace MongoConnection
             Pokemon pokemon = new Pokemon();
             try
             {
-                var update = Builders<Pokemon>.Update.Set("clave", nickname);
+                var update = Builders<Pokemon>.Update.Set("name", nickname);
                 var filter = Builders<Pokemon>.Filter.Eq("_id", ObjectId.Parse(id));
                 pokemon = Collection.FindOneAndUpdate(filter, update);
             }
@@ -91,6 +105,18 @@ namespace MongoConnection
             {
                 throw e;
             }
+        }
+
+        private List<Pokemon> PaginateBoxes(int Page)
+        {
+            var fullList = GetAllPokemon();
+            var start = 30 * (Page - 1);
+            var end = 30 * Page;
+            var lastIndex = fullList.Count % 30;
+
+            if (Page <= 0 || start > fullList.Count) return new List<Pokemon>();
+            else if (Page > fullList.Count / 30) return fullList.GetRange(start, lastIndex);
+            else return fullList.GetRange(start, 30);
         }
     }
 }

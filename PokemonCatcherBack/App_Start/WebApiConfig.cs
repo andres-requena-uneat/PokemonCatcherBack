@@ -9,6 +9,10 @@ namespace PokemonCatcherBack
     {
         public static void Register(HttpConfiguration config)
         {
+            // CORS ENABLED
+            config.EnableCors();
+
+
             // Web API configuration and services
 
             // Web API routes
