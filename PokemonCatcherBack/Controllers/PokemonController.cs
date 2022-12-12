@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Mvc;
@@ -10,12 +11,19 @@ using MongoConnection;
 
 namespace PokemonCatcherBack.Controllers
 {
-    [EnableCors(origins: "http://localhost:3000", headers: "*", methods: "*")]
+    [EnableCors("*","*","*")]
     public class PokemonController : ApiController
     {
         MongoConnection.MongoConnection Client = new MongoConnection.MongoConnection();
 
         [System.Web.Http.HttpGet]
+
+        public async Task<HttpResponseMessage> Get()
+        {
+            var pokemon = await PokemonSourceController.Get();
+            return pokemon;
+        }
+
         public List<Pokemon> Get(int page)
         {
             return Client.GetBoxPage(page);
